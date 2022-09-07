@@ -1,14 +1,10 @@
-import { Routes, Route } from "react-router-dom";
-import Config from "./components/Config";
-import SaleLabel from "./components/SaleLabel";
+import React from 'react';
+import AppRoute from './containers/Routes/Routes';
 
-const App = () => {
+export default function App() {
   return (
-    <Routes>
-      <Route exact path="/home" element={<SaleLabel />} />
-      <Route exact path="/config" element={<Config />} />
-    </Routes>
+    <AppRoute/>
   );
 }
 
-export default App;
+
