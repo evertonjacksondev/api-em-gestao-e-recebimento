@@ -3,7 +3,7 @@ import AppRoute from './containers/Routes/Routes';
 
 export default function App() {
   return (
-    <AppRoute/>
+      <AppRoute />
   );
 }
 

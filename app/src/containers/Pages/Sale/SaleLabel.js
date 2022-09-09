@@ -1,11 +1,12 @@
 import React from 'react';
-
 import { Button, Grid, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material';
+
 
 
 const createData = (id, date, name, shipTo, paymentMethod, amount) => {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
+
 
 const rows = [
   createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
@@ -47,15 +48,15 @@ const SaleLabel = () => {
           <TableRow>
             <TableCell>Etiqueta</TableCell>
             <TableCell>Destinatario</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>Endreço</TableCell>
+            <TableCell>Serviço</TableCell>
+            <TableCell align="right">Valor</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
+              <Button><TableCell>{row.date}s</TableCell></Button>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.shipTo}</TableCell>
               <TableCell>{row.paymentMethod}</TableCell>
@@ -63,7 +64,10 @@ const SaleLabel = () => {
             </TableRow>
           ))}
         </TableBody>
+
       </Table>
+
+
 
     </React.Fragment>
   );
