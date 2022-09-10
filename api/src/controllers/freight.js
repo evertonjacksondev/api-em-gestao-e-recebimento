@@ -7,7 +7,7 @@ const { getUserByToken } = require('../../lib/data/user');
 router.get('/consulta/:cep', async (req, res,) => {
   try {
     let db = req.mongoConnection;
-    await getUserByToken(req.headers, db);
+    // await getUserByToken(req.headers, db);
     let { cep } = req.params;
     let validateCEP = cep.replace('-', '');
     let client = await clientSoap('cep');
@@ -23,7 +23,7 @@ router.get('/consulta/:cep', async (req, res,) => {
 router.get('/prazoEntrega', async (req, res,) => {
   try {
     let db = req.mongoConnection;
-    await getUserByToken(req.headers, db);
+    // await getUserByToken(req.headers, db);
     let result = await calcFreight(req.query);
 
     res.status(200).json(result);
@@ -34,4 +34,4 @@ router.get('/prazoEntrega', async (req, res,) => {
 });
 
 
-module.exports = app => app.use('/v1/front/correio', router);
+module.exports = app => app.use('/v1/correio', router);
