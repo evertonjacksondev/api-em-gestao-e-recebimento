@@ -21,7 +21,7 @@ async function mongoConnect() {
   });
   await client.connect();
 
-  let db = client.db(local ? "hubDigigrow_LOCAL" : dev == 'dev' ? "hubDigigrow_DEV" : dev == 'hom' ? "hubDigigrow_HOM" : "hubDigigrow");
+  let db = client.db(local ? "melhor-post" : dev == 'dev' ? "melhor-post" : dev == 'hom' ? "melhor-post" : "melhor-post");
   if (dev && !dontReset) await generateDefaultBaseTest(db)
 
   return db;

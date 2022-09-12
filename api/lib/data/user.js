@@ -56,7 +56,7 @@ const getUserData = async (document, sellerId, db, checkSellerId = false, checkA
   }
 
   if (user.sellerIds.length > 1 && (!sellerId && checkSellerId)) throw 'User has more than 1 seller, put sellerId on Header';
-  
+
   return user;
 }
 
@@ -114,7 +114,7 @@ const checkConfirmationToken = async (db, mail, token, type = 'normal') => {
 
 }
 
-const generateConfirmationToken = async (db, data,type) => {
+const generateConfirmationToken = async (db, data, type) => {
   let userCollection = db.collection('user');
 
   if (!data.mail) throw 'Email Obrigatório.';
@@ -131,7 +131,7 @@ const generateConfirmationToken = async (db, data,type) => {
     token,
     active: setActive
   };
-  
+
   if (data.newMail) setData.newMail = data.newMail;
 
   await userCollection.updateOne({
@@ -142,10 +142,10 @@ const generateConfirmationToken = async (db, data,type) => {
     upsert: true
   });
 
-  if(type == 'resetMail')
-  await sendMail(data.mail,
-    'Codigo de Autorização Digigrow Hub',
-    ` <table align='center' style="font-family:Trebuchet ms,Arial,sans-serif;max-width:600px;width:100%;">
+  if (type == 'resetMail')
+    await sendMail(data.mail,
+      'Codigo de Autorização Digigrow Hub',
+      ` <table align='center' style="font-family:Trebuchet ms,Arial,sans-serif;max-width:600px;width:100%;">
         <tbody>
           <tr style="background-color: #F3F4F9; display:flex">    
             <td width="50%" valign="middle" style="padding:15px;">  
@@ -166,13 +166,13 @@ const generateConfirmationToken = async (db, data,type) => {
         </table>
       
       </html> `,
-    config,
-  );
+      config,
+    );
 
-  if(type == 'confirmMail')
-  await sendMail(data.mail, 
-  'Seja bem-vindo(a) ao nosso HUB!',
-  ` <table align='center' style="font-family:Trebuchet ms,Arial,sans-serif;max-width:600px;width:100%;">
+  if (type == 'confirmMail')
+    await sendMail(data.mail,
+      'Seja bem-vindo(a) ao nosso HUB!',
+      ` <table align='center' style="font-family:Trebuchet ms,Arial,sans-serif;max-width:600px;width:100%;">
     <tbody>
       <tr style="background-color: #F3F4F9; display:flex">    
         <td width="50%" valign="middle" style="padding:15px;">  
@@ -192,10 +192,10 @@ const generateConfirmationToken = async (db, data,type) => {
       </tbody>
     </table>
   `,
-  config,
-)
+      config,
+    )
 
-} 
+}
 
 
 
@@ -316,7 +316,7 @@ const resetPassword = async (db, userBody) => {
 }
 
 const changePassword = async (db, userBody, userId) => {
-  
+
   let userColl = db.collection('user');
 
   let user = await userColl.findOne({
@@ -377,6 +377,7 @@ const setAccess = async (db, userIds, active = false, userLogged) => {
 }
 
 const login = async (db, mail, password, googleToken) => {
+
   let userFilter = {};
 
   if (googleToken) {
@@ -385,81 +386,22 @@ const login = async (db, mail, password, googleToken) => {
       userFilter.mail = checkedGoogleUser.payload.email;
     }
   } else {
-    if (!mail) throw 'Mail required.';
-    if (!password) throw 'Password required.';
+    if (!mail) throw 'Email Obrigatório.';
+    if (!password) throw 'Senha Obrigatório.';
 
     userFilter.mail = mail;
-    userFilter.password = password;
+    // userFilter.password = password;
   }
 
-  if (!validateEmail(userFilter.mail)) throw 'Invalid Mail.';
+  if (!validateEmail(userFilter.mail)) throw 'Email Inválido';
 
   let userCollection = db.collection('user');
   let user = await userCollection.findOne(userFilter);
-  
-  
-  if (!user && !googleToken) throw `Usuário ou senha inválidos.`;
-  if (!user && googleToken) throw `Este email ainda não foi cadastrado, por favor crie uma nova conta.`;
 
-  delete user.password;
-  delete user.userToken;
+  return user ? true : false
 
-  let secretKey = 'TokenDeValidação';
-
-  user.userToken = jwt.sign({
-    document: user.document
-  }, secretKey, {
-    expiresIn: '24h' 
-  });
-
-
-  let userXSellerColl = db.collection('userXSeller');
-  let appMenuXUserColl = db.collection('appMenuXUser');
-  let appMenuColl = db.collection('appMenu');
-
-  let userAdmin = await userXSellerColl.findOne({
-    userId: user._id,
-    admin: true
-  });
-
-  let appMenu;
-  if (userAdmin) {
-    appMenu = await appMenuColl.find({}).toArray();
-  } else {
-    let appMenuXUser = await appMenuXUserColl.findOne({
-      userId: user._id
-    });
-    if (appMenuXUser)
-      appMenu = await appMenuColl.find({
-        key: {
-          $in: appMenuXUser.appMenu
-        }
-      }).toArray();
-  }
-
-
-  let links = [];
-
-  appMenu && appMenu.map(m => {
-    if (m.link)
-      links.push(m.link);
-
-    if (m.child)
-      links.push(...m.child.map(m2 => {
-        if (m2.link) return m2.link
-      }))
-  });
-
-  user.links = links.length == 0 ? ['/', '/seller', '/settings'] : links;
-
-  let hasSellers = (await userXSellerColl.count({
-    userId: user._id
-  })) > 0;
-
-  user['hasSellers'] = hasSellers;
-
-  return user;
 }
+
 
 const updateUserPic = async (db, userId, image, type) => {
   let fileName = `userPic-${userId}.jpg`;
