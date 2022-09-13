@@ -55,9 +55,11 @@ router.post('/register', async (req, res) => {
 
     let userColl = db.collection('user');
 
-    let user = await userColl.find({ mail, document }).toArray();
+    let userMail = await userColl.find({ mail }).toArray();
+    let userCpf = await userColl.find({ document }).toArray();
 
-    if (user.length > 0) throw 'Usuário já cadastrado'
+    if (userMail.length > 0) throw 'Usuário já cadastrado'
+    if (userCpf.length > 0) throw 'Usuário já cadastrado'
 
     await userColl.updateMany({ mail, document }, { $set: update }, { upsert: true })
     res.status(200).json(user);

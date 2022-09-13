@@ -1,5 +1,5 @@
 {
-  "name": "api.hub.digigrow",
+  "name": "api-melhor-post",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "linuxHom": "nodemon index hom",
     "linuxDev": "nodemon index dev dontReset"
   },
-  "author": "",
+  "author": "Everton Jackson",
   "license": "ISC",
   "dependencies": {
     "compression": "^1.7.4",
