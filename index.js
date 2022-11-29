@@ -11,11 +11,11 @@ app.use(express.json())
 mongoConnect()
 
 app.use(function (req, res, next) {
-  for (var key in req.query) {
+  for (let key in req.query) {
     req.query[key.toLowerCase()] = req.query[key]
   }
 
-  for (var key in req.headers) {
+  for (let key in req.headers) {
     req.headers[key.toLowerCase()] = req.headers[key]
   }
   next()
