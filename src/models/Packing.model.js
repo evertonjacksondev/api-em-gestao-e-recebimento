@@ -21,14 +21,13 @@ const userSchema = new Schema(
       type: String,
       required: true
     },
-    phoneNumber: {
-      type: String,
-      required: true
-    },
     status: {
       type: String,
       required: true,
       enum: ['Pendente', 'Retirado']
+    },
+    cadastradoPor: {
+    
     },
     withDrawn: {
       type: String,

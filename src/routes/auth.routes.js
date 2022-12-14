@@ -46,7 +46,11 @@ router.post('/signup', async (req, res, next) => {
     const salt = bcrypt.genSaltSync(10)
     const passwordHash = bcrypt.hashSync(password, salt)
 
-    const createdUser = await User.create({ name, email, password:passwordHash })
+    const createdUser = await User.create({
+      name,
+      email,
+      password: passwordHash
+    })
 
     const { _id } = createdUser
 
@@ -67,7 +71,7 @@ router.post('/login', async (req, res, next) => {
     const compareHash = bcrypt.compareSync(password, user.password)
 
     if (!compareHash) {
-      res.status(400).json({ message: 'invalid password' })
+      res.status(400).json({ message: 'Senha incorreta' })
       return
     }
 

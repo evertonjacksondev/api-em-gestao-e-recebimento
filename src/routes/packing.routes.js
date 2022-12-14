@@ -12,6 +12,18 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    if (!id) throw 'Encomenda ID is required!'
+    const packings = await Packing.findOne({ _id: id })
+
+    res.status(200).json(packings)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+})
+
 router.post('/', async (req, res) => {
   try {
     const {
@@ -21,8 +33,7 @@ router.post('/', async (req, res) => {
       type,
       status,
       withDrawn,
-      cadastradoPor,
-      phoneNumber
+      cadastradoPor
     } = req.body
 
     if ((!name || !torre, !type || !cadastradoPor)) {
@@ -35,12 +46,11 @@ router.post('/', async (req, res) => {
       torre,
       numero,
       type,
-      phoneNumber,
       status,
       withDrawn,
       cadastradoPor
     })
-    res.status(200).json(insertId)
+    res.status(200).json(insertId[0])
   } catch (error) {
     res.status(400).json(error.message)
   }
@@ -49,6 +59,7 @@ router.post('/', async (req, res) => {
 router.put('/', async (req, res) => {
   try {
     const {
+      _id,
       name,
       torre,
       numero,
@@ -64,8 +75,8 @@ router.put('/', async (req, res) => {
       return
     }
 
-    const insertId = await Resident.updateOne(
-      { torre, numero, name },
+    const insertId = await Packing.updateOne(
+      { _id},
       { type, phoneNumber, status, withDrawn, cadastradoPor },
       { upsert: false }
     )
