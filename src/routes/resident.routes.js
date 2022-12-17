@@ -12,6 +12,18 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    if (!id) throw 'Encomenda ID is required!'
+    const residents = await Resident.findOne({ _id: id })
+
+    res.status(200).json(residents)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+})
+
 router.post('/', async (req, res) => {
   try {
     const { name, torre, numero, phoneNumber, document } = req.body
@@ -28,26 +40,23 @@ router.post('/', async (req, res) => {
       phoneNumber,
       document
     })
-    res.status(200).json(insertId)
+    res.status(200).json(insertId[0])
   } catch (error) {
-    res
-      .status(400)
-      .json(error.message)
+    res.status(400).json(error.message)
   }
 })
 
 router.put('/', async (req, res) => {
   try {
-    const { name, torre, numero, phoneNumber, document } = req.body
+    const { name, torre, numero, phoneNumber, document, _id } = req.body
     if ((!name || !torre, !numero || !phoneNumber || !document)) {
       res.status(400).json({ message: 'Missing information' })
       return
     }
 
     const insertId = await Resident.updateOne(
-      { torre, numero, name },
-      { torre, numero, phoneNumber, document },
-      { upsert: false }
+      { _id },
+      { name,torre, numero, phoneNumber, document }
     )
     res.status(200).json(insertId)
   } catch (error) {
